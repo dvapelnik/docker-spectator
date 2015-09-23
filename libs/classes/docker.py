@@ -12,8 +12,6 @@ class Docker:
             "docker ps | tail -n +2 | cut -d' ' -f1 | xargs docker stats --no-stream | tail -n +2"
         )
 
-        print(result)
-
         resultDataArray = {}
 
         for line in result.split('\n'):
