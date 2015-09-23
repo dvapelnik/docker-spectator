@@ -4,16 +4,16 @@ from config import config
 import sys
 import time
 import libs.helpers as helpers
+from pprint import PrettyPrinter
+from argparse import ArgumentParser
 from libs.classes.docker import Docker
 from libs.classes.db import DB
 from libs.classes.Data import Data
-import argparse
-import pprint
 
-pp = pprint.PrettyPrinter(indent=4)
+pp = PrettyPrinter(indent=4)
 
 # region Arguments parsing
-parser = argparse.ArgumentParser()
+parser = ArgumentParser()
 
 collectGroup = parser.add_argument_group('Collecting data')
 collectGroup.add_argument('-cl', '--collect',
