@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import config
+from config import config
 import sys
 import time
 import libs.helpers as helpers
@@ -11,6 +11,8 @@ import argparse
 import pprint
 
 pp = pprint.PrettyPrinter(indent=4)
+
+print(config['docker.spectator'])
 
 # region Arguments parsing
 parser = argparse.ArgumentParser()
@@ -35,14 +37,14 @@ averageGroup.add_argument('-cn', '--container-name',
 
 args = parser.parse_args()
 
-print(args)
+# print(args)
 # endregion
 
-db = DB(config.config['db.filename'])
+db = DB(config['db.filename'])
 docker = Docker()
 
 if args.collect:
-    secondsLimit = helpers.hoursToSeconds(config.config['db.limit.hours'])
+    secondsLimit = helpers.hoursToSeconds(config['db.limit.hours'])
     _data = db.readDbData(secondsLimit)
     _data[int(time.time())] = docker.getStatsDataArray()
     db.writeDbData(_data, secondsLimit)
