@@ -12,8 +12,6 @@ import pprint
 
 pp = pprint.PrettyPrinter(indent=4)
 
-print(config['docker.spectator'])
-
 # region Arguments parsing
 parser = argparse.ArgumentParser()
 
@@ -61,10 +59,8 @@ if args.average:
 
     if args.field == 'cpu':
         result = dataWorker.getCpuData(container_id=args.container_id, container_name=args.container_name)
-        print('cpu')
     elif args.field == 'mem':
         result = dataWorker.getMemPercent(container_id=args.container_id, container_name=args.container_name)
-        print('mem')
     else:
         resultInput = dataWorker.getNetTotalInputTraffic(
             container_id=args.container_id, container_name=args.container_name)
@@ -72,9 +68,6 @@ if args.average:
             container_id=args.container_id, container_name=args.container_name)
 
         result = [resultInput, resultOutput]
-
-        print('net')
-
     print(result)
 
 
