@@ -24,3 +24,8 @@ def hoursToSeconds(hours):
 
 def minuteToSeconds(minutes):
     return (int)(minutes) * 60
+
+
+def dump(data):
+    print(data)
+    return 0
