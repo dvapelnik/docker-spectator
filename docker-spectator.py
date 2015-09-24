@@ -31,7 +31,6 @@ averageGroup = parser.add_argument_group('Retrieving average data')
 averageGroup.add_argument('-a', '--average',
                           type=int,
                           choices=[5, 10, 15],
-                          default=5,
                           help='Specify time period in minutes for retrieve average data')
 averageGroup.add_argument('-f', '--field',
                           choices=['cpu', 'mem', 'net'],
@@ -68,20 +67,21 @@ if args.collect:
     db.writeDbData(_data, secondsLimit)
     logging.info('Data collected')
 
-if args.container_ids or args.average:
-    secondsAverage = helpers.minuteToSeconds(args.average)
-
-    dataWorker = Data(db.readDbData(secondsAverage))
-
 if args.container_ids:
+    dataWorker = Data(db.readDbData(helpers.hoursToSeconds(24)))
+
     for container_id in dataWorker.getContainerIds():
         print('{0}  {1}'.format(container_id, dataWorker.getContainerNameById(container_id)))
 
-if args.average and not args.container_ids:
+if args.average:
     if not args.field:
         logging.error('Error: field type not specified')
         parser.print_help()
         sys.exit(1)
+
+    secondsAverage = helpers.minuteToSeconds(args.average)
+
+    dataWorker = Data(db.readDbData(secondsAverage))
 
     if args.field == 'cpu':
         logging.info('Retrieving CPU% data')
