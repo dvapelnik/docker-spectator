@@ -19,20 +19,20 @@ if len(sys.argv) > 1 and sys.argv[1] == 'config':
     if field == 'cpu' or field == 'mem':
         if is_single_container:
             print('graph_title {0} usage for container {1}'.format(field, container_name))
+            print('{0}.label {0}'.format(field))
         else:
             print('graph_title {0} usage for containers'.format(field))
 
         print('graph_vlabel {0}'.format(field))
-        print('{0}.label {0}'.format(field))
     elif field == 'mem':
         if is_single_container:
             print('graph_title {0} usage for container {1}'.format(field, container_name))
+            print('{0}.label {0}'.format(field))
         else:
             print('graph_title {0} usage for containers'.format(field))
 
         print('graph_vlabel {0}'.format(field))
         print('graph_args --base 1000')
-        print('{0}.label {0}'.format(field))
     elif field == 'net' and is_single_container:
         print('graph_title Network usage for container {0}'.format(container_name))
         print('graph_order down up')
