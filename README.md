@@ -12,7 +12,7 @@ Plugin system consists of
 2. `argparse` (`pip install argparse`)
 
 
-## How to use
+## How to use munin plugin
 
 ### Download
 
@@ -70,6 +70,86 @@ or
 ```bash
 /etc/init.d/docker-spectatord restart
 ```
+
+## How to use `docker-spectator.py` only
+
+`docker-spectator-daemon.py` is the daemon which exec `docker-spectator.py` every 10 seconds
+This value is changeable. Look at `config/config.py`
+
+Look at `--help` firstly:
+```bash
+python docker-spectator.py --help
+```
+```bash
+usage: docker-spectator.py [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}] [-cl]
+                           [-a {5,10,15}] [-f {cpu,mem,net}]
+                           [-cid CONTAINER_ID] [-cn CONTAINER_NAME] [-cids]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Common:
+  -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        Define log level
+
+Collecting data:
+  -cl, --collect        Should collect current data?
+
+Retrieving average data:
+  -a {5,10,15}, --average {5,10,15}
+                        Specify time period in minutes for retrieve average
+                        data
+  -f {cpu,mem,net}, --field {cpu,mem,net}
+                        Specify data field
+  -cid CONTAINER_ID, --container-id CONTAINER_ID
+                        Specify docker container id. Container id is preferred
+                        if specified both
+  -cn CONTAINER_NAME, --container-name CONTAINER_NAME
+                        Specify docker container name. Container id is
+                        preferred if specified both
+
+Container:
+  -cids, --container-ids
+                        Retrieve container ids
+```
+
+You can use `docker-spectator.py` for retrieve list of containers which data already collected
+```bash
+python docker-spectator.py --container-ids
+```
+```
+fa0a12244b9f fancy_bebe
+6e1a5f381010 little_penguin
+```
+
+You can get collect data from active containers 
+```bash
+python docker-spectator.py --collect
+```
+
+You can retrieve average collected data for container by 5, 10, 15 minutes and specify container by name or id
+Retrieve cpu average value by 5 minutes container specified by id:
+```bash
+python docker-spectator.py --average 5 --field=cpu --container-id=fa0a12244b9f
+```
+```
+0.17
+```
+Retrieve cpu average value by 10 minutes container specified by name:
+```bash
+python docker-spectator.py --average 10 --field=mem --container-name=little_penguin
+```
+```
+55344679
+```
+Or network. First part of result is downloaded traffic and second is uploaded. Values separated with *single* space
+```bash
+python docker-spectator.py --average 10 --field=net --container-name=little_penguin
+```
+```
+738 55644 
+```
+
 ## ToDo
 
 1. In this moment network graph is not stable
