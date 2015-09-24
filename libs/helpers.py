@@ -15,7 +15,7 @@ def cleanHumanBytes(s):
 
 
 def trimData(data, seconds, now=(int)(time.time())):
-    return {k: v for (k, v) in data.iteritems() if k > (now - seconds)} if len(data) else {}
+    return dict((k, v) for (k, v) in data.iteritems() if k > (now - seconds)) if len(data) else dict()
 
 
 def hoursToSeconds(hours):

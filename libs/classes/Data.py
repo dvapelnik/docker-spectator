@@ -10,12 +10,12 @@ class Data:
         self.dataArray = dataArray
 
     def __filterDataByContainerName(self, container_name):
-        return {ts: {container_id: data for (container_id, data) in containers.iteritems()
-                     if data['name'] == container_name} for (ts, containers) in self.dataArray.iteritems()}
+        return dict((ts, dict((container_id, data) for (container_id, data) in containers.iteritems()
+                              if data['name'] == container_name)) for (ts, containers) in self.dataArray.iteritems())
 
     def __filterDataByContainerId(self, container_id):
-        return {ts: {_container_id: data for (_container_id, data) in containers.iteritems()
-                     if _container_id == container_id} for (ts, containers) in self.dataArray.iteritems()}
+        return dict((ts, dict((_container_id, data) for (_container_id, data) in containers.iteritems()
+                              if _container_id == container_id)) for (ts, containers) in self.dataArray.iteritems())
 
     def __getProcessData(self, container_id=None, container_name=None):
         if not container_id and not container_name:
