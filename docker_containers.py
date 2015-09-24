@@ -5,6 +5,9 @@ import re
 import commands
 from config import config
 
+command_for_average_template = '/usr/bin/env python {0} --average=5 --field={1} --container-name={2}'
+command_for_container_names_template = "/usr/bin/env python {0} --container-ids | cut -d' ' -f2"
+
 batch_containers = re.findall('docker_containers_(cpu|mem|net)$', sys.argv[0])
 single_container = re.findall('docker_containers_(.+)_(cpu|mem|net)$', sys.argv[0])
 
@@ -14,6 +17,9 @@ if is_single_container:
     container_name, field = single_container[0]
 else:
     field = batch_containers[0]
+    container_names = commands.getoutput(command_for_container_names_template.format(config['docker.spectator'])).split(
+        '\n')
+
 if len(sys.argv) > 1 and sys.argv[1] == 'config':
     print('graph_category docker_containers')
     if field == 'cpu' or field == 'mem':
@@ -22,6 +28,8 @@ if len(sys.argv) > 1 and sys.argv[1] == 'config':
             print('{0}.label {0}'.format(field))
         else:
             print('graph_title {0} usage for containers'.format(field))
+            for container_name in container_names:
+                print('{0}.label {0}'.format(container_name))
 
         print('graph_vlabel {0}'.format(field))
     elif field == 'mem':
@@ -30,6 +38,8 @@ if len(sys.argv) > 1 and sys.argv[1] == 'config':
             print('{0}.label {0}'.format(field))
         else:
             print('graph_title {0} usage for containers'.format(field))
+            for container_name in container_names:
+                print('{0}.label {0}'.format(container_name))
 
         print('graph_vlabel {0}'.format(field))
         print('graph_args --base 1000')
@@ -50,17 +60,13 @@ if len(sys.argv) > 1 and sys.argv[1] == 'config':
         pass
     sys.exit(0)
 
-command_for_average_template = '/usr/bin/env python {0} --average=5 --field={1} --container-name={2}'
-command_for_container_names_template = "/usr/bin/env python {0} --container-ids | cut -d' ' -f2"
-
 if field == 'cpu' or field == 'mem':
     if is_single_container:
         print('{1}.value {0}'.format(commands.getoutput(
             command_for_average_template.format(config['docker.spectator'], field, container_name)
         ), field))
     else:
-        for container_name in commands.getoutput(
-                command_for_container_names_template.format(config['docker.spectator'])).split('\n'):
+        for container_name in container_names:
             print('{1}.value {0}'.format(commands.getoutput(
                 command_for_average_template.format(config['docker.spectator'], field, container_name)
             ), container_name))
