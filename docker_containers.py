@@ -13,6 +13,11 @@ if len(sys.argv) > 1 and sys.argv[1] == 'config':
         print('graph_title {0} usage for container {1}'.format(field, container_name))
         print('graph_vlabel {0}'.format(field))
         print('{0}.label {0}'.format(field))
+    elif field == 'mem':
+        print('graph_title {0} usage for container {1}'.format(field, container_name))
+        print('graph_vlabel {0}'.format(field))
+        print('graph_args --base 1000')
+        print('{0}.label {0}'.format(field))
     elif field == 'net':
         print('graph_title Network usage for container {0}'.format(container_name))
         print('graph_order down up')

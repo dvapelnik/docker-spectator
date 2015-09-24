@@ -60,9 +60,9 @@ class Data:
         reduced_mem_percent = 0
         for ts, containerData in process_data.iteritems():
             for _container_id, _container_data in containerData.iteritems():
-                reduced_mem_percent += (float)(_container_data['mem']['percent'])
+                reduced_mem_percent += (int)(_container_data['mem']['usage'])
 
-        return round(reduced_mem_percent / len(process_data), 2)
+        return (int)(round(reduced_mem_percent / len(process_data)))
 
     def __getNetTotalTraffic(self, direction, container_id=None, container_name=None):
         process_data = self.__getProcessData(container_id=container_id, container_name=container_name)
