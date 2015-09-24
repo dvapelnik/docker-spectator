@@ -98,7 +98,7 @@ if args.average:
         resultOutput = dataWorker.getNetTotalOutputTraffic(
             container_id=args.container_id, container_name=args.container_name)
 
-        result = (str(resultInput) + ' ' + str(resultOutput)).split()
+        result = str(resultInput) + ' ' + str(resultOutput)
     print(result)
 
 
