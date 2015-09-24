@@ -34,8 +34,8 @@ python docker-spectator-daemon.py --start
 ### Make plugin symlinks
 
 ```bash
-cd /etc/munin/templates/plugin-conf.d
-cp /path/to/project/location/docker-spectator/plugin-conf.d/docker_containers_ .
+cd /etc/munin/plugin-conf.d
+cp /path/to/project/location/docker-spectator/templates/plugin-conf.d/docker_containers_ .
 cd ../plugins
 # for monitoring single container
 # replace [container_name] with container's name for monitoring
@@ -45,7 +45,7 @@ ls -s /path/to/project/location/docker-spectator/docker_containers.py docker_con
 ls -s /path/to/project/location/docker-spectator/docker_containers.py docker_containers_[field_name]
 ```
 
-> Warning! Batch graph monitoring available only for `cpu` and `mem` fields not for `network`
+> **Warning!** Batch graph monitoring available only for `cpu` and `mem` fields not for `network`
 
 ### Restart `munin-node`
 
@@ -53,6 +53,23 @@ ls -s /path/to/project/location/docker-spectator/docker_containers.py docker_con
 service munin-node restart
 ```
 
+### Make init.d file
+
+```bash
+cd /path/to/project/location/docker-spectator
+cp templates/init.d/docker-spectatord /etc/init.d/
+chmod +x /etc/init.d/docker-spectatord
+```
+> **Attention!** You should change daemon directory (`DAEMON_PATH`) in `/etc/init.d/docker-spectatord` to `/path/to/project/location/docker-spectator`
+
+After this you can use init.d script for start/stop daemon which collects data from docker containers like this:
+```bash
+service docker-spectatord restart
+```
+or
+```bash
+/etc/init.d/docker-spectatord restart
+```
 ## ToDo
 
 1. In this moment network graph is not stable
