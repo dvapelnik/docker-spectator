@@ -71,7 +71,7 @@ if args.container_ids:
     dataWorker = Data(db.readDbData(helpers.hoursToSeconds(24)))
 
     for container_id in dataWorker.getContainerIds():
-        print('{0}  {1}'.format(container_id, dataWorker.getContainerNameById(container_id)))
+        print('{0} {1}'.format(container_id, dataWorker.getContainerNameById(container_id)))
 
 if args.average:
     if not args.field:

@@ -5,20 +5,35 @@ import re
 import commands
 from config import config
 
-container_name, field = re.findall('docker_containers_(.+)_(cpu|mem|net)$', sys.argv[0])[0]
+batch_containers = re.findall('docker_containers_(cpu|mem|net)$', sys.argv[0])
+single_container = re.findall('docker_containers_(.+)_(cpu|mem|net)$', sys.argv[0])
 
+is_single_container = (bool)(single_container) and not (bool)(batch_containers)
+
+if is_single_container:
+    container_name, field = single_container[0]
+else:
+    field = batch_containers[0]
 if len(sys.argv) > 1 and sys.argv[1] == 'config':
     print('graph_category docker_containers')
     if field == 'cpu' or field == 'mem':
-        print('graph_title {0} usage for container {1}'.format(field, container_name))
+        if is_single_container:
+            print('graph_title {0} usage for container {1}'.format(field, container_name))
+        else:
+            print('graph_title {0} usage for containers'.format(field))
+
         print('graph_vlabel {0}'.format(field))
         print('{0}.label {0}'.format(field))
     elif field == 'mem':
-        print('graph_title {0} usage for container {1}'.format(field, container_name))
+        if is_single_container:
+            print('graph_title {0} usage for container {1}'.format(field, container_name))
+        else:
+            print('graph_title {0} usage for containers'.format(field))
+
         print('graph_vlabel {0}'.format(field))
         print('graph_args --base 1000')
         print('{0}.label {0}'.format(field))
-    elif field == 'net':
+    elif field == 'net' and is_single_container:
         print('graph_title Network usage for container {0}'.format(container_name))
         print('graph_order down up')
         print('graph_args --base 1000')
@@ -35,17 +50,23 @@ if len(sys.argv) > 1 and sys.argv[1] == 'config':
         pass
     sys.exit(0)
 
+command_for_average_template = '/usr/bin/env python {0} --average=5 --field={1} --container-name={2}'
+command_for_container_names_template = "/usr/bin/env python {0} --container-ids | cut -d' ' -f2"
+
 if field == 'cpu' or field == 'mem':
-    print('{1}.value {0}'.format(commands.getoutput(
-        '/usr/bin/env python {0} --average=5 --field={1} --container-name={2}'.format(
-            config['docker.spectator'], field, container_name
-        )
-    ), field))
-elif field == 'net':
+    if is_single_container:
+        print('{1}.value {0}'.format(commands.getoutput(
+            command_for_average_template.format(config['docker.spectator'], field, container_name)
+        ), field))
+    else:
+        for container_name in commands.getoutput(
+                command_for_container_names_template.format(config['docker.spectator'])).split('\n'):
+            print('{1}.value {0}'.format(commands.getoutput(
+                command_for_average_template.format(config['docker.spectator'], field, container_name)
+            ), container_name))
+elif field == 'net' and is_single_container:
     down, up = (commands.getoutput(
-        '/usr/bin/env python {0} --average=5 --field={1} --container-name={2}'.format(
-            config['docker.spectator'], field, container_name
-        )
+        command_for_average_template.format(config['docker.spectator'], field, container_name)
     )).split()
     print('down.label {0}'.format(down))
     print('up.label {0}'.format(up))
