@@ -2,11 +2,14 @@
 
 import os
 
+root_path = os.path.dirname(os.path.abspath(__file__)) + '/'
+
 config = {
-    'db.filename': os.path.dirname(os.path.abspath(__file__)) + '/' + 'db.bin',
+    'db.filename': root_path + 'db.bin',
     'db.limit.hours': 24,
-    'docker.spectator': os.path.dirname(os.path.abspath(__file__)) + '/' + 'docker-spectator.py',
-    'daemon.pid': '/var/run/docker-spectator-daemon.pid',
-    'daemon.log': '/var/log/docker-spectator-daemon.log',
-    'daemin.sleep': 10,
+    'docker.spectator': root_path + 'docker-spectator.py',
+    'docker.spectator.log': root_path + 'log/docker-spectator.log',
+    'daemon.pid': root_path + 'run/docker-spectator-daemon.pid',
+    'daemon.log': root_path + 'log/docker-spectator-daemon.log',
+    'daemon.sleep': 10,
 }

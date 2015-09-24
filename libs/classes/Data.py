@@ -17,15 +17,6 @@ class Data:
         return {ts: {_container_id: data for (_container_id, data) in containers.iteritems()
                      if _container_id == container_id} for (ts, containers) in self.dataArray.iteritems()}
 
-    def __getContainerIds(self):
-        ids_dict = {}
-
-        for ts, containersData in self.dataArray.iteritems():
-            for containerId, data in containersData.iteritems():
-                ids_dict[containerId] = None
-
-        return ids_dict.keys()
-
     def __getProcessData(self, container_id=None, container_name=None):
         if not container_id and not container_name:
             raise Exception('One of container_id or container_name should be defined')
@@ -37,6 +28,20 @@ class Data:
             process_data = self.__filterDataByContainerId(container_id)
 
         return process_data
+
+    def getContainerIds(self):
+        ids_dict = {}
+
+        for ts, containersData in self.dataArray.iteritems():
+            for containerId, data in containersData.iteritems():
+                ids_dict[containerId] = None
+
+        return ids_dict.keys()
+
+    def getContainerNameById(self, container_id):
+        return self.__filterDataByContainerId(container_id) \
+            .itervalues().next() \
+            .itervalues().next()['name']
 
     def getCpuData(self, container_id=None, container_name=None):
 
