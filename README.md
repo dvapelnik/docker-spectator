@@ -34,7 +34,7 @@ python docker-spectator-daemon.py --start
 ### Make plugin symlinks
 
 ```bash
-cd /etc/munin/plugin-conf.d
+cd /etc/munin/templates/plugin-conf.d
 cp /path/to/project/location/docker-spectator/plugin-conf.d/docker_containers_ .
 cd ../plugins
 # for monitoring single container

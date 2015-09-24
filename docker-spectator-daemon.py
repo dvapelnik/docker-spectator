@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 import logging
+from argparse import ArgumentParser
+
 from libs.classes.DockerSpeactatorDaemon import DockerSpectatorDaemon
 from config import config
-from argparse import ArgumentParser
+
 
 # region Arguments parsing
 parser = ArgumentParser()

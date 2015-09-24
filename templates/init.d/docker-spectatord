@@ -1,0 +1,35 @@
+#!/bin/bash
+# docker-spectator daemon
+# https://github.com/dvapelnik/docker-spectator
+# chkconfig: 345 20 80
+# description: docker-spectator daemon
+# processname: docker-spectator
+
+DAEMON_PATH="/root/scripts/docker-spectator"
+
+DAEMON=docker-spectator-daemon.py
+DAEMONOPTS="--log-level=WARNING"
+
+NAME=docker-spectatord
+DESC="Docker spectator daemon"
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+case "$1" in
+start)
+	cd $DAEMON_PATH
+	python $DAEMON $DAEMONOPTS --start
+;;
+stop)
+    cd $DAEMON_PATH
+	python $DAEMON $DAEMONOPTS --stop
+;;
+restart)
+  	cd $DAEMON_PATH
+  	python $DAEMON $DAEMONOPTS --restart
+;;
+
+*)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+esac
