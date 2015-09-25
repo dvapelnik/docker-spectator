@@ -12,16 +12,23 @@ class DB:
     def __init__(self, dbPath):
         self.dbPath = dbPath
 
+    def setLogger(self, logging):
+        self.logging = logging
+
     def getDbPath(self):
         return self.dbPath
 
     def readDbData(self, limitSeconds):
+        data = {}
+
         if os.path.exists(self.dbPath):
-            db_read_file_descriptor = open(self.dbPath, 'rb')
-            data = pickle.load(db_read_file_descriptor)
-            db_read_file_descriptor.close()
-        else:
-            data = {}
+            try:
+                db_read_file_descriptor = open(self.dbPath, 'rb')
+                data = pickle.load(db_read_file_descriptor)
+                db_read_file_descriptor.close()
+            except BaseException:
+                if self.logging:
+                    self.logging.error(BaseException.message)
 
         return helpers.trimData(data, limitSeconds)
 

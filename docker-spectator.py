@@ -2,14 +2,16 @@
 
 import sys
 import time
-import libs.helpers as helpers
 import logging
-from config import config
 from pprint import PrettyPrinter
 from argparse import ArgumentParser
+
+import libs.helpers as helpers
+from config import config
 from libs.classes.docker import Docker
 from libs.classes.db import DB
 from libs.classes.Data import Data
+
 
 pp = PrettyPrinter(indent=4)
 
@@ -57,6 +59,7 @@ logging.basicConfig(
     level=getattr(logging, args.log_level.upper()))
 
 db = DB(config['db.filename'])
+db.setLogger(logging)
 docker = Docker()
 
 if args.collect:
