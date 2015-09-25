@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-import os.path, pickle
+import os.path
+import pickle
+
 import libs.helpers as helpers
 
 
@@ -15,11 +17,15 @@ class DB:
 
     def readDbData(self, limitSeconds):
         if os.path.exists(self.dbPath):
-            data = pickle.load(open(self.dbPath, 'rb'))
+            db_read_file_descriptor = open(self.dbPath, 'rb')
+            data = pickle.load(db_read_file_descriptor)
+            db_read_file_descriptor.close()
         else:
             data = {}
 
         return helpers.trimData(data, limitSeconds)
 
     def writeDbData(self, data, limitSeconds):
-        pickle.dump(helpers.trimData(data, limitSeconds), open(self.dbPath, 'wb'))
+        db_write_file_descriptor = open(self.dbPath, 'wb')
+        pickle.dump(helpers.trimData(data, limitSeconds), db_write_file_descriptor)
+        db_write_file_descriptor.close()
