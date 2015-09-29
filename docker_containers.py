@@ -3,7 +3,9 @@
 import sys
 import re
 import commands
+
 from config import config
+
 
 command_for_average_template = '/usr/bin/env python {0} --average=5 --field={1} --container-name={2}'
 command_for_container_names_template = "/usr/bin/env python {0} --container-ids | cut -d' ' -f2"
@@ -74,7 +76,7 @@ elif field == 'net' and is_single_container:
     down, up = (commands.getoutput(
         command_for_average_template.format(config['docker.spectator'], field, container_name)
     )).split()
-    print('down.label {0}'.format(down))
-    print('up.label {0}'.format(up))
+    print('down.value {0}'.format(down))
+    print('up.value {0}'.format(up))
 else:
     pass
